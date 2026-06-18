@@ -1,13 +1,17 @@
 import { marked } from 'marked';
 import matter from 'gray-matter';
 
-// Import all .md files from the posts folder
-const postFiles = import.meta.glob('../content/posts/*.md', { as: 'raw', eager: true });
+// Use query instead of as: 'raw'
+const postFiles = import.meta.glob('../content/posts/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
 
 export function getAllPosts() {
   const posts = [];
   for (const path in postFiles) {
-    const content = postFiles[path];
+    const content = postFiles[path]; // now it's the raw string directly
     const { data, content: markdownContent } = matter(content);
     const slug = path.split('/').pop().replace(/\.md$/, '');
     posts.push({
